@@ -60,7 +60,14 @@ int contigSum(RAITER first, RAITER last)
     std::size_t size = std::distance(first, last);
     if(first == last-1)
     {
-        return *first;
+        if(*first <0)
+        {
+            return 0;
+        }
+        else
+        {
+            return *first;
+        }
     }
     if(size < 1)
     {
