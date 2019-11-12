@@ -6,76 +6,70 @@
 #define HW2_CONTIGSUM_HPP
 #include <iostream>
 #include <limits.h>
+#include <algorithm>
 
-int max (int a, int b)
-{
-    if(a>b)
-    {
-        return a;
-    } else return b;
-}
 
-int max (int a, int b, int c)
+
+//Repurposed to actually follow specifications this time.
+//A. The GCS of the sequence.
+//B. The greatest possible sum of a contiguous subsequence
+//    that includes the first value in the sequence, or zero if all
+//    such sums are negative.
+//C. The greatest possible sum of a contiguous subsequence
+//    that includes the last value in the sequence, or zero if all
+//    such sums are negative.
+//D. The sum of the entire sequence.
+
+
+struct GCS
 {
-    return max(max(a, b), c);
-}
+    GCS()= default;
+    GCS(int gcs, int gcsL, int gcsR, int Sum): gcs(gcs), gcsLeft(gcsL), gcsRight(gcsR), sum(Sum){}
+    int gcs=0;
+    int gcsLeft = 0;
+    int gcsRight=0;
+    int sum = 0;
+};
+
+//template <typename T>
+//T max (T a, T b, T c)
+//{
+//    return std::max(std::max(a, b), c);
+//}
 
 template<typename RAITER>
-int Conquer(RAITER first, RAITER mid,  RAITER last)
+GCS Recursive(RAITER first, RAITER last, size_t size)
 {
-    //Left of mid
-    int sum= 0;
-    int left_sum = 0;
-    for (RAITER i = mid; i>= first; i-- )
+    if (size == 1)
     {
-        sum= sum + *i;
-        if (sum > left_sum)
-        {
-            left_sum = sum;
-        }
+        return GCS(*first, *first, *first, *first);
+
     }
+    auto middle = std::next(first, size/2);
+    auto left = Recursive(first, middle, std::distance(first, middle));
+    auto right = Recursive(middle, last, std::distance(middle, last));
 
-    //Right of mid
-    sum = 0;
-    int right_sum = 0;
-    for (RAITER i= mid+1; i<=last; i++)
-    {
-        sum = sum + *i;
-        if (sum > right_sum)
-        {
-            right_sum = sum;
-        }
-    }
-
-
-    //Combine the two
-    return left_sum + right_sum;
+    return GCS(std::max({left.gcsRight+right.gcsLeft, left.gcs, right.gcs}),
+            std::max({left.gcs, left.sum + right.gcs}),
+            std::max({left.gcs + right.sum, right.gcs}),
+            left.sum+right.sum);
 
 }
 
 template<typename RAITER>
 int contigSum(RAITER first, RAITER last)
 {
-    RAITER mid =first +  (last-first)/2;
+    //Previous version, moved and modified to the recursive function
+//    RAITER mid =first +  (last-first)/2;
     std::size_t size = std::distance(first, last);
-    if(first == last-1)
-    {
-        if(*first <0)
-        {
-            return 0;
-        }
-        else
-        {
-            return *first;
-        }
-    }
+
     if(size < 1)
     {
         return 0;
     }
     else
     {
-        return max(contigSum(first, mid), contigSum(mid+1,last), Conquer(first, mid, last-1));
+        return std::max(Recursive(first, last, size).gcs, 0);
     }
 }
 
