@@ -7,7 +7,7 @@
 #include <iostream>
 #include <limits.h>
 #include <algorithm>
-
+#include <numeric>
 
 
 //Repurposed to actually follow specifications this time.
@@ -42,7 +42,7 @@ GCS Recursive(RAITER first, RAITER last, size_t size)
 {
     if (size == 1)
     {
-        return GCS(*first, *first, *first, *first);
+        return GCS(*first, *first, *(last-1), *first);
 
     }
     auto middle = std::next(first, size/2);
@@ -50,8 +50,8 @@ GCS Recursive(RAITER first, RAITER last, size_t size)
     auto right = Recursive(middle, last, std::distance(middle, last));
 
     return GCS(std::max({left.gcsRight+right.gcsLeft, left.gcs, right.gcs}),
-            std::max({left.gcs, left.sum + right.gcs}),
-            std::max({left.gcs + right.sum, right.gcs}),
+            std::max({left.gcsLeft, left.sum + right.gcsLeft}),
+            std::max({left.gcsRight + right.sum, right.gcsRight}),
             left.sum+right.sum);
 
 }
