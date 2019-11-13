@@ -1,5 +1,7 @@
 //
 // Created by Ian Ferguson on 2019-10-16.
+// Redone on 2019-11-08 to satisfy specifications
+// 
 //
 
 #ifndef HW2_CONTIGSUM_HPP
@@ -20,15 +22,16 @@
 //    such sums are negative.
 //D. The sum of the entire sequence.
 
-
+//GCS struct keeps track of ABCD
+//Global, public access variables.
 struct GCS
 {
     GCS()= default;
     GCS(int gcs, int gcsL, int gcsR, int Sum): gcs(gcs), gcsLeft(gcsL), gcsRight(gcsR), sum(Sum){}
-    int gcs=0;
-    int gcsLeft = 0;
-    int gcsRight=0;
-    int sum = 0;
+    int gcs=0;       //A
+    int gcsLeft = 0; //B
+    int gcsRight=0;  //C
+    int sum = 0;     //D
 };
 
 //template <typename T>
@@ -45,8 +48,11 @@ GCS Recursive(RAITER first, RAITER last, size_t size)
         return GCS(*first, *first, *(last-1), *first);
 
     }
+    //Recursive calls to set up left and  right sides of the list
     auto middle = std::next(first, size/2);
+    //First iterator to the middle iterator
     auto left = Recursive(first, middle, std::distance(first, middle));
+    //Middle iterator to the last iterator
     auto right = Recursive(middle, last, std::distance(middle, last));
 
     return GCS(std::max({left.gcsRight+right.gcsLeft, left.gcs, right.gcs}),
@@ -63,6 +69,8 @@ int contigSum(RAITER first, RAITER last)
 //    RAITER mid =first +  (last-first)/2;
     std::size_t size = std::distance(first, last);
 
+    //Base Case
+    //Otherwise take the max of our recursive call
     if(size < 1)
     {
         return 0;
