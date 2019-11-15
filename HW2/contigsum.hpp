@@ -1,7 +1,7 @@
 //
 // Created by Ian Ferguson on 2019-10-16.
 // Redone on 2019-11-08 to satisfy specifications
-// 
+// https://github.com/servebotfrank/CS411/tree/master/HW2
 //
 
 #ifndef HW2_CONTIGSUM_HPP
