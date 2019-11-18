@@ -19,9 +19,14 @@ bool compare(vector<int> w, vector<int> e)
     }
 }
 
-int Recursive(int w, int e, const std::vector<Bridge> & bridges, const vector<int> & memory)
+int Recursive(int w, int e, const std::vector<Bridge> & bridges,  vector<vector<int>> & memory)
 {
     int toll = 0;
+    if ( memory[w][e] != -1)
+    {
+        return memory[w][e];
+    }
+
 
     for(auto & b: bridges)
     {
@@ -30,7 +35,7 @@ int Recursive(int w, int e, const std::vector<Bridge> & bridges, const vector<in
             toll = std::max(Recursive(b[0], b[1], bridges, memory)+b[2], toll);
         }
     }
-    memory[toll];
+    memory[w][e] = toll;
     return toll;
 }
 
@@ -43,7 +48,7 @@ int build(int w, int e, const std::vector<Bridge> & bridges)
     //Cannot sort with const due to how the swap comparison works
     vector<Bridge>BridgeSort(bridges);
     std::sort(BridgeSort.begin(), BridgeSort.end(), compare);
-    vector<int> memory(bridges.size()-1, 0);
+    auto memory = vector<vector<int>>(w+1,vector<int>(e+1, -1));
 
     return Recursive(w, e, BridgeSort, memory);
 
