@@ -1125,6 +1125,7 @@ void test_build(Tester & t)
 int main()
 {
     Tester t;
+    auto start = std::chrono::steady_clock::now();
     test_build(t);
 
     std::cout << std::endl;
@@ -1138,9 +1139,11 @@ int main()
         std::cout << "Tests ********** UNSUCCESSFUL **********"
                   << std::endl;
     }
+    auto end = std::chrono::steady_clock::now();
     std::cout << std::endl;
 
     // Wait for user
+    std::cout << std::chrono::duration_cast<std::chrono::seconds>(end-start).count() << " seconds" << std::endl;
     std::cout << "Press ENTER to quit ";
     while (std::cin.get() != '\n') ;
 
