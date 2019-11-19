@@ -1,5 +1,5 @@
 //
-// Created by Servebotfrank on 11/17/2019.
+// Created by Ian Ferguson on 11/17/2019.
 //
 
 #include "build.hpp"
@@ -30,22 +30,26 @@ Placer::Placer(int w, int e, const std::vector<Bridge> &bridges): _memory(w+1, v
 
 }
 
+//Workhorse function
+//Uses Top Down Memoization to calculate the maximum toll
+//No bridge can cross or start/end from the same city as another
 int Placer::Recursive (int w, int e, const std::vector<Bridge> & bridges, std::vector<std::vector<int>> & memory)
 {
     int toll = 0;
     if (memory[w][e] != -1)
     {
-        return memory[w][e];
+        return memory[w][e];  //Returns if we already know the value at this position
     }
-
 
     for(auto & b: bridges)
     {
-        if (b[0] < w && b[1] < e)
+        if (b[0] < w && b[1] < e)  //Bridges do not cross
         {
             toll = std::max(Recursive(b[0], b[1], bridges, memory)+b[2], toll);
         }
     }
+    //Store for Memoization
+    //Top Down
     memory[w][e] = toll;
     return toll;
 }
@@ -56,37 +60,18 @@ int Placer::getreturnToll()
 
 
 
-
-//int Recursive(int w, int e, const std::vector<Bridge> & bridges,  vector<vector<int>> & memory)
-//{
-//    int toll = 0;
-//    if ( memory[w][e] != -1)
-//    {
-//        return memory[w][e];
-//    }
-//
-//
-//    for(auto & b: bridges)
-//    {
-//        if (b[0] < w && b[1] < e)
-//        {
-//            toll = std::max(Recursive(b[0], b[1], bridges, memory)+b[2], toll);
-//        }
-//    }
-//    memory[w][e] = toll;
-//    return toll;
-//}
-
 int build(int w, int e, const std::vector<Bridge> & bridges)
 {
+    //Check if the vector of bridges is empty.
     if (bridges.size() == 0)
     {
         return 0;
     }
-    //Cannot sort with const due to how the swap comparison works
+    if (bridges.size() == 1)
+    {
+        return bridges [0][2];
+    }
     Placer Placer(w, e, bridges);
     return Placer.getreturnToll();
-
-
 
 }
