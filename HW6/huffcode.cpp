@@ -14,6 +14,10 @@
 // Modified 11/22/17
 // Chris Hartman
 // For CS 411 Fall 2017
+// Finished 12/6/2019
+// Ian Ferguson
+// For CS411 Fall 2019
+
 
 #include "huffcode.hpp"  // for class HuffCode declaration
 #include <string>
@@ -30,7 +34,9 @@ using std::pair;
 
 void HuffCode::setWeights(const unordered_map<char, int> & theweights)
 {
-    if(theweights.size() == 0)
+    //Base cases
+    //size() == 0 works too, but CLion recommended empty instead
+    if(theweights.empty())
     {
         return;
     }
@@ -46,7 +52,7 @@ void HuffCode::setWeights(const unordered_map<char, int> & theweights)
 
         auto right = _minHeap.top();
         _minHeap.pop();
-
+        // '$" is a non leaft parent node
         auto root = std::make_shared<minHeapNode>('$', left->_weight + right ->_weight);
 
         root->_left = left;
@@ -61,7 +67,7 @@ void HuffCode::setWeights(const unordered_map<char, int> & theweights)
 
 string HuffCode::encode(const string & text) const
 {
-    // WRITE THIS!!!
+    // For each character in the text, search for the corresponding huffman code
     string encoder;
     for(auto letter:text)
     {
@@ -73,15 +79,18 @@ string HuffCode::encode(const string & text) const
 
 string HuffCode::decode(const string & codestr) const
 {
-    // WRITE THIS!!!
+    // code is the current huffman code
     string decoded, code;
     for(auto mapper: codestr)
     {
+        //Add character to the current code
         code += mapper;
         for(auto key: _mapper)
         {
+            //Check if the code matches one of our stored codes
             if (key.second == code)
             {
+                //Add to the result and reset
                 decoded += key.first;
                 code = "";
 
@@ -97,10 +106,12 @@ void HuffCode::storeCodes(std::shared_ptr<minHeapNode> root, std::string str) {
         return;
     }
 
+    //Store encoded string in a hash table
     if(root-> _data != '$')
     {
         _mapper[root -> _data] = str;
     }
+    //Check the left and right branches
     storeCodes(root->_left, str+"0");
     storeCodes(root ->_right, str+ "1");
 }

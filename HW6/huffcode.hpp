@@ -9,6 +9,9 @@
 // Modified 11/22/17
 // Chris Hartman
 // For CS 411 Fall 2019
+// Finished 12/6/2019
+// Ian Ferguson
+// For CS411 Fall 2019
 
 #ifndef FILE_HUFFCODE_H_INCLUDED
 #define FILE_HUFFCODE_H_INCLUDED
@@ -17,6 +20,10 @@
 #include <unordered_map>
 #include <queue>
 
+//Inspiration for structure from
+//https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/
+
+//minHeapNode, Huffman tree struct
 struct minHeapNode
 {
     char _data;
