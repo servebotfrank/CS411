@@ -2,7 +2,6 @@
 // Created by Ian Ferguson on 2019-12-06.
 //
 
-#include "huffcode.hpp"
 
 // huffcode.cpp  UNFINISHED
 // Glenn G. Chappell
@@ -31,15 +30,43 @@ using std::pair;
 
 void HuffCode::setWeights(const unordered_map<char, int> & theweights)
 {
-    // WRITE THIS!!!
+    if(theweights.size() == 0)
+    {
+        return;
+    }
 
+    for(auto w: theweights)
+    {
+        _minHeap.emplace(std::make_shared<minHeapNode>(w.first, w.second));
+    }
+    while(_minHeap.size()!=1)
+    {
+        auto left = _minHeap.top();
+        _minHeap.pop();
+
+        auto right = _minHeap.top();
+        _minHeap.pop();
+
+        auto root = std::make_shared<minHeapNode>('$', left->_weight + right ->_weight);
+
+        root->_left = left;
+        root ->_right = right;
+
+        _minHeap.push(root);
+
+    }
 }
 
 
 string HuffCode::encode(const string & text) const
 {
     // WRITE THIS!!!
-    return "";  // DUMMY RETURN
+    string encoder;
+    for(auto letter:text)
+    {
+        encoder += _mapper.find(letter) -> second;
+    }
+    return encoder;
 }
 
 

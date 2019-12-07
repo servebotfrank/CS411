@@ -15,6 +15,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <queue>
 
 struct minHeapNode
 {
@@ -29,6 +30,15 @@ struct minHeapNode
         _weight = weight;
     }
 };
+struct compare
+{
+    //Try to do shared_ptr here, but it really didn't like it.
+    bool operator()(std::shared_ptr<minHeapNode> & left , std::shared_ptr<minHeapNode> & right)
+    {
+        return(left->_weight > right -> _weight);
+    }
+};
+
 
 // Class HuffCode
 // Encoding & decoding using a Huffman code
@@ -50,7 +60,8 @@ public:
 
 // ***** HuffCode: data members *****
 private:
-
+    std::priority_queue<std::shared_ptr<minHeapNode>, std::vector<std::shared_ptr<minHeapNode>>, compare> _minHeap;
+    std::unordered_map<char, std::string> _mapper;
 };  // End class HuffCode
 
 
