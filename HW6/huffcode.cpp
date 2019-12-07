@@ -55,6 +55,7 @@ void HuffCode::setWeights(const unordered_map<char, int> & theweights)
         _minHeap.push(root);
 
     }
+    storeCodes(_minHeap.top(), "");
 }
 
 
@@ -73,5 +74,33 @@ string HuffCode::encode(const string & text) const
 string HuffCode::decode(const string & codestr) const
 {
     // WRITE THIS!!!
-    return "";  // DUMMY RETURN
+    string decoded, code;
+    for(auto mapper: codestr)
+    {
+        code += mapper;
+        for(auto key: _mapper)
+        {
+            if (key.second == code)
+            {
+                decoded += key.first;
+                code = "";
+
+            }
+        }
+    }
+    return decoded;
+}
+
+void HuffCode::storeCodes(std::shared_ptr<minHeapNode> root, std::string str) {
+    if(!root)
+    {
+        return;
+    }
+
+    if(root-> _data != '$')
+    {
+        _mapper[root -> _data] = str;
+    }
+    storeCodes(root->_left, str+"0");
+    storeCodes(root ->_right, str+ "1");
 }

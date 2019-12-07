@@ -52,6 +52,8 @@ public:
 // ***** HuffCode: general public functions *****
 public:
 
+
+
     void setWeights(const std::unordered_map<char, int> & theweights);
 
     std::string encode(const std::string & text) const;
@@ -60,6 +62,7 @@ public:
 
 // ***** HuffCode: data members *****
 private:
+    void storeCodes(std::shared_ptr<minHeapNode> root, std::string str);
     std::priority_queue<std::shared_ptr<minHeapNode>, std::vector<std::shared_ptr<minHeapNode>>, compare> _minHeap;
     std::unordered_map<char, std::string> _mapper;
 };  // End class HuffCode
